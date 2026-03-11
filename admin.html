@@ -71,6 +71,13 @@ body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: v
   box-shadow: 0 4px 20px rgba(0,71,182,0.4);
 }
 .btn-login:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,71,182,0.6); }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
 .login-hint { text-align: center; margin-top: 16px; font-size: 12px; color: var(--muted); }
 .login-hint code {
   background: var(--surface);
@@ -459,9 +466,10 @@ body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: v
       </div>
     </div>
     <button class="btn-login" onclick="entrar()">🔐 Entrar</button>
+    <div id="loginErro" style="display:none;background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.4);color:#f87171;font-size:13px;font-weight:600;padding:10px 14px;border-radius:8px;margin-top:12px;text-align:center;"></div>
     <div class="login-hint">
-      Usuário padrão: <code>admin</code><br>
-      <small style="font-size:11px;margin-top:4px;display:block">Caso não saiba a senha, solicite redefinição ao responsável do sistema.</small>
+      Usuário: <code>admin</code> · Senha padrão: <code>cnt2025</code><br>
+      <small style="font-size:11px;margin-top:4px;display:block">Altere a senha após o primeiro acesso em ⚙️ Configurações.</small>
     </div>
   </div>
 </div>
@@ -1229,15 +1237,27 @@ function toggleAdminPass() {
 }
 
 function entrar() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  if (user === 'admin' && pass === getAdminPass()) {
-    adminLogado = true;
-    document.getElementById('adminLogin').style.display = 'none';
-    document.getElementById('adminApp').classList.add('visible');
-    initAdmin();
-  } else {
-    mostrarToast('❌ Usuário ou senha incorretos', 'error');
+  try {
+    var user = document.getElementById('loginUser').value.trim();
+    var pass = document.getElementById('loginPass').value;
+    var erroEl = document.getElementById('loginErro');
+
+    if (user === 'admin' && pass === getAdminPass()) {
+      adminLogado = true;
+      if (erroEl) erroEl.style.display = 'none';
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminApp').classList.add('visible');
+      initAdmin();
+    } else {
+      if (erroEl) {
+        erroEl.textContent = '❌ Usuário ou senha incorretos. Verifique e tente novamente.';
+        erroEl.style.display = 'block';
+      }
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginPass').focus();
+    }
+  } catch(e) {
+    alert('Erro ao fazer login: ' + e.message);
   }
 }
 
