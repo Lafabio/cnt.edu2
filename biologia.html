@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biologia — Materiais CNT.edu</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul: #0047B6;
+  --azul2: #1a6eff;
+  --verde: #00c471;
+  --verde2: #059669;
+  --amarelo: #F2B817;
+  --bg: #060810;
+  --surface: #0d1017;
+  --card: #131620;
+  --card2: #1a1e2e;
+  --border: rgba(255,255,255,0.07);
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --radius: 14px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Space Grotesk',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  padding:0 40px; height:68px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:rgba(6,8,16,0.92); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand {
+  display:flex; align-items:center; gap:10px;
+  font-family:'Sora',sans-serif; font-weight:800; font-size:18px;
+  color:#fff; text-decoration:none;
+}
+.nav-logo {
+  width:38px; height:38px;
+  background:linear-gradient(135deg,#1b7a3e,var(--verde));
+  border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.nav-links { display:flex; align-items:center; gap:6px; list-style:none; }
+.nav-links a {
+  color:var(--muted); text-decoration:none; font-size:14px; font-weight:500;
+  padding:7px 13px; border-radius:8px; transition:all .2s;
+}
+.nav-links a:hover { color:#fff; background:rgba(255,255,255,0.06); }
+.nav-links a.active { color:var(--verde); }
+
+/* ===== HERO ===== */
+.page-hero {
+  min-height:260px; padding:110px 40px 50px;
+  display:flex; align-items:flex-end;
+  position:relative; overflow:hidden;
+}
+.page-hero-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 70% 80% at 10% 50%, rgba(27,122,62,0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 20%, rgba(0,196,113,0.1) 0%, transparent 50%),
+    var(--bg);
+}
+.page-hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,196,113,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,196,113,0.04) 1px, transparent 1px);
+  background-size:50px 50px;
+  mask-image:radial-gradient(ellipse 70% 80% at 20% 40%, black, transparent);
+}
+.page-hero-content { position:relative; z-index:2; max-width:1260px; margin:0 auto; width:100%; }
+.breadcrumb {
+  display:flex; align-items:center; gap:8px;
+  font-size:13px; color:var(--muted); margin-bottom:14px;
+}
+.breadcrumb a { color:var(--muted); text-decoration:none; transition:color .2s; }
+.breadcrumb a:hover { color:#fff; }
+.breadcrumb span { color:var(--verde); }
+.page-tag {
+  display:inline-flex; align-items:center; gap:7px;
+  background:rgba(0,196,113,0.12); border:1px solid rgba(0,196,113,0.25);
+  color:var(--verde); font-size:11px; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; padding:5px 13px; border-radius:20px; margin-bottom:14px;
+}
+.page-tag::before { content:''; width:6px; height:6px; background:var(--verde); border-radius:50%; }
+.page-hero h1 {
+  font-family:'Sora',sans-serif; font-size:clamp(28px,4vw,48px); font-weight:800; line-height:1.15; margin-bottom:12px;
+}
+.page-hero h1 span { color:var(--verde); }
+.page-hero p { font-size:16px; color:var(--muted); max-width:560px; line-height:1.7; }
+
+/* ===== FILTROS ===== */
+.filtros-section {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:0 40px; position:sticky; top:68px; z-index:100;
+}
+.filtros-inner {
+  max-width:1260px; margin:0 auto;
+  display:flex; align-items:center; gap:12px;
+  padding:14px 0; flex-wrap:wrap;
+}
+.filtro-grupo { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.filtro-label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; }
+.filtro-btn {
+  background:var(--card); border:1px solid var(--border);
+  color:var(--muted); font-family:'Space Grotesk',sans-serif;
+  font-size:12px; font-weight:600; padding:6px 14px; border-radius:20px;
+  cursor:pointer; transition:all .2s; white-space:nowrap;
+}
+.filtro-btn:hover { color:#fff; border-color:rgba(255,255,255,0.2); }
+.filtro-btn.ativo { background:rgba(0,196,113,0.15); border-color:rgba(0,196,113,0.4); color:var(--verde); }
+.filtro-btn.serie.ativo { background:rgba(0,71,182,0.15); border-color:rgba(0,71,182,0.4); color:#6ea4ff; }
+.filtro-divider { width:1px; height:24px; background:var(--border); flex-shrink:0; }
+.filtro-busca {
+  margin-left:auto;
+  background:var(--card); border:1px solid var(--border);
+  color:var(--text); font-family:'Space Grotesk',sans-serif;
+  font-size:13px; padding:7px 14px; border-radius:20px; width:220px;
+  transition:border-color .2s;
+}
+.filtro-busca:focus { outline:none; border-color:var(--verde); }
+.filtro-busca::placeholder { color:var(--muted); }
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.main { max-width:1260px; margin:0 auto; padding:40px 40px 80px; }
+
+/* ===== ASSUNTO SECTION ===== */
+.assunto-section { margin-bottom:56px; }
+.assunto-header {
+  display:flex; align-items:center; gap:14px; margin-bottom:24px;
+  padding-bottom:16px; border-bottom:1px solid var(--border);
+}
+.assunto-icon {
+  width:48px; height:48px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.assunto-title-group {}
+.assunto-title { font-family:'Sora',sans-serif; font-size:20px; font-weight:800; }
+.assunto-count { font-size:13px; color:var(--muted); margin-top:2px; }
+
+/* ===== CARDS DE MATERIAL ===== */
+.materiais-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:16px;
+}
+.material-card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; overflow:hidden;
+  transition:all .25s; cursor:pointer; position:relative;
+}
+.material-card:hover { transform:translateY(-4px); box-shadow:0 14px 40px rgba(0,0,0,0.45); }
+.material-card:hover .card-download { opacity:1; }
+
+.card-thumb {
+  height:110px; display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.card-thumb-icon { font-size:42px; z-index:1; position:relative; }
+.card-thumb-bg {
+  position:absolute; inset:0;
+  background:linear-gradient(135deg, var(--cor-assunto, rgba(0,196,113,0.2)), transparent);
+}
+
+.card-body { padding:16px; }
+.card-serie-tag {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+  padding:3px 9px; border-radius:5px; margin-bottom:10px;
+}
+.serie-1 { background:rgba(0,71,182,0.15); color:#6ea4ff; }
+.serie-2 { background:rgba(124,58,237,0.15); color:#c084fc; }
+.serie-3 { background:rgba(242,184,23,0.15); color:var(--amarelo); }
+.serie-todos { background:rgba(0,196,113,0.12); color:var(--verde); }
+
+.card-title {
+  font-family:'Sora',sans-serif; font-size:14px; font-weight:700;
+  line-height:1.4; margin-bottom:6px;
+}
+.card-desc {
+  font-size:12px; color:var(--muted); line-height:1.6;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.card-footer {
+  padding:10px 16px; border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.card-meta { font-size:11px; color:var(--muted); }
+.card-download {
+  background:var(--verde2); color:#fff;
+  border:none; border-radius:7px; padding:6px 14px;
+  font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700;
+  cursor:pointer; transition:all .2s; opacity:0;
+  display:flex; align-items:center; gap:5px; text-decoration:none;
+}
+.material-card:hover .card-download { opacity:1; }
+.card-download:hover { background:var(--verde); transform:scale(1.04); }
+
+/* ===== ESTADO VAZIO ===== */
+.estado-vazio {
+  text-align:center; padding:60px 20px;
+  background:var(--card); border:1px dashed var(--border); border-radius:18px;
+}
+.estado-vazio .icon { font-size:52px; margin-bottom:14px; display:block; }
+.estado-vazio h3 { font-family:'Sora',sans-serif; font-size:18px; font-weight:700; margin-bottom:8px; }
+.estado-vazio p { font-size:14px; color:var(--muted); }
+
+/* ===== MODAL PDF ===== */
+.pdf-modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.92);
+  backdrop-filter:blur(12px); z-index:2000;
+  display:flex; flex-direction:column;
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+.pdf-modal-overlay.active { opacity:1; pointer-events:all; }
+.pdf-modal-bar {
+  background:var(--card); border-bottom:1px solid var(--border);
+  padding:12px 24px; display:flex; align-items:center; gap:16px; flex-shrink:0;
+}
+.pdf-modal-title { font-family:'Sora',sans-serif; font-size:15px; font-weight:700; flex:1; }
+.pdf-modal-actions { display:flex; gap:8px; }
+.btn-icon {
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text); width:36px; height:36px; border-radius:8px;
+  cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center;
+  transition:all .2s; text-decoration:none;
+}
+.btn-icon:hover { background:rgba(255,255,255,0.1); }
+.pdf-modal-frame { flex:1; width:100%; border:none; }
+
+/* ===== TOAST ===== */
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:13px 22px; font-size:14px; font-weight:600;
+  box-shadow:0 8px 40px rgba(0,0,0,0.5); z-index:9999; transition:transform .3s;
+  display:flex; align-items:center; gap:10px;
+}
+.toast.visible { transform:translateX(-50%) translateY(0); }
+
+/* ===== EMPTY STATE GLOBAL ===== */
+.page-empty {
+  text-align:center; padding:80px 20px;
+}
+.page-empty .icon { font-size:72px; display:block; margin-bottom:20px; }
+.page-empty h2 { font-family:'Sora',sans-serif; font-size:22px; font-weight:800; margin-bottom:10px; }
+.page-empty p { font-size:15px; color:var(--muted); }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width:768px) {
+  .navbar { padding:0 16px; }
+  .page-hero { padding:100px 16px 40px; }
+  .filtros-section { padding:0 16px; }
+  .main { padding:24px 16px 60px; }
+  .nav-links { display:none; }
+  .filtro-busca { width:140px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">🧬</div>
+    <span>CNT<span style="color:var(--verde)">.</span>edu</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Início</a></li>
+    <li><a href="#" class="active">🧬 Biologia</a></li>
+    <li><a href="quimica.html">⚗️ Química</a></li>
+    <li><a href="ciencias.html">🔭 Ciências EF</a></li>
+    <li><a href="planejador.html">🗓️ Planejador</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="index.html">Início</a> › <span>Materiais de Biologia</span>
+    </div>
+    <div class="page-tag">Biblioteca Digital</div>
+    <h1>Materiais de <span>Biologia</span></h1>
+    <p>PDFs organizados por assunto e série para facilitar o estudo e o preparo das aulas.</p>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtros-section">
+  <div class="filtros-inner">
+    <span class="filtro-label">Assunto</span>
+    <div class="filtro-grupo" id="filtrosAssunto">
+      <button class="filtro-btn ativo" onclick="filtrarAssunto('todos', this)">Todos</button>
+    </div>
+    <div class="filtro-divider"></div>
+    <span class="filtro-label">Série</span>
+    <div class="filtro-grupo" id="filtrosSerie">
+      <button class="filtro-btn serie ativo" onclick="filtrarSerie('todos', this)">Todas</button>
+      <button class="filtro-btn serie" onclick="filtrarSerie('1', this)">1º Ano</button>
+      <button class="filtro-btn serie" onclick="filtrarSerie('2', this)">2º Ano</button>
+      <button class="filtro-btn serie" onclick="filtrarSerie('3', this)">3º Ano</button>
+    </div>
+    <input class="filtro-busca" type="text" placeholder="🔍 Buscar material..." oninput="buscarMaterial(this.value)" id="inputBusca">
+  </div>
+</div>
+
+<!-- CONTEÚDO -->
+<div class="main" id="mainContent">
+  <div class="page-empty">
+    <span class="icon">🧬</span>
+    <h2>Carregando materiais...</h2>
+    <p>Aguarde um momento.</p>
+  </div>
+</div>
+
+<!-- MODAL PDF VIEWER -->
+<div class="pdf-modal-overlay" id="pdfModal">
+  <div class="pdf-modal-bar">
+    <span class="pdf-modal-title" id="pdfModalTitle"></span>
+    <div class="pdf-modal-actions">
+      <a href="#" id="pdfDownloadBtn" class="btn-icon" title="Baixar PDF" download>⬇</a>
+      <button class="btn-icon" onclick="fecharPdf()" title="Fechar">✕</button>
+    </div>
+  </div>
+  <iframe class="pdf-modal-frame" id="pdfFrame" src=""></iframe>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+// ============================================================
+// DADOS
+// ============================================================
+const ASSUNTOS_CONFIG = {
+  'Citologia':       { icon:'🔬', cor:'rgba(0,196,113,0.25)',   cor2:'#00c471' },
+  'Genética':        { icon:'🧬', cor:'rgba(124,58,237,0.25)',  cor2:'#c084fc' },
+  'Ecologia':        { icon:'🌿', cor:'rgba(27,122,62,0.3)',    cor2:'#4ade80' },
+  'Evolução':        { icon:'🦕', cor:'rgba(242,184,23,0.25)',  cor2:'#F2B817' },
+  'Zoologia':        { icon:'🐾', cor:'rgba(244,63,94,0.2)',    cor2:'#f87171' },
+  'Botânica':        { icon:'🌱', cor:'rgba(5,150,105,0.25)',   cor2:'#34d399' },
+  'Fisiologia':      { icon:'🫀', cor:'rgba(239,68,68,0.2)',    cor2:'#fca5a5' },
+  'Microbiologia':   { icon:'🦠', cor:'rgba(0,71,182,0.2)',     cor2:'#6ea4ff' },
+  'Embriologia':     { icon:'🥚', cor:'rgba(251,191,36,0.2)',   cor2:'#fde68a' },
+  'Reino Fungi':     { icon:'🍄', cor:'rgba(180,83,9,0.2)',     cor2:'#fbbf24' },
+  'Bioquímica':      { icon:'⚗️', cor:'rgba(99,102,241,0.2)',   cor2:'#a5b4fc' },
+  'Histologia':      { icon:'🔭', cor:'rgba(16,185,129,0.2)',   cor2:'#6ee7b7' },
+};
+
+const SERIES_LABELS = { '1':'1º Ano EM', '2':'2º Ano EM', '3':'3º Ano EM', 'todos':'Todas as séries' };
+
+function getMateriais() {
+  try { return JSON.parse(localStorage.getItem('cnt_bio_materiais') || '[]'); }
+  catch { return []; }
+}
+
+// ============================================================
+// ESTADO DOS FILTROS
+// ============================================================
+let filtroAssunto = 'todos';
+let filtroSerie = 'todos';
+let termoBusca = '';
+
+function filtrarAssunto(val, btn) {
+  filtroAssunto = val;
+  document.querySelectorAll('#filtrosAssunto .filtro-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderMateriais();
+}
+
+function filtrarSerie(val, btn) {
+  filtroSerie = val;
+  document.querySelectorAll('#filtrosSerie .filtro-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderMateriais();
+}
+
+function buscarMaterial(val) {
+  termoBusca = val.toLowerCase();
+  renderMateriais();
+}
+
+// ============================================================
+// RENDERIZAÇÃO
+// ============================================================
+function renderFiltrosAssunto(materiais) {
+  const assuntos = [...new Set(materiais.map(m => m.assunto))].sort();
+  const container = document.getElementById('filtrosAssunto');
+  container.innerHTML = `<button class="filtro-btn${filtroAssunto==='todos'?' ativo':''}" onclick="filtrarAssunto('todos',this)">Todos</button>`;
+  assuntos.forEach(a => {
+    const cfg = ASSUNTOS_CONFIG[a] || { icon:'📄' };
+    const btn = document.createElement('button');
+    btn.className = `filtro-btn${filtroAssunto===a?' ativo':''}`;
+    btn.textContent = `${cfg.icon} ${a}`;
+    btn.onclick = function(){ filtrarAssunto(a, this); };
+    container.appendChild(btn);
+  });
+}
+
+function getMaterialsFiltrados(materiais) {
+  return materiais.filter(m => {
+    const matchAssunto = filtroAssunto === 'todos' || m.assunto === filtroAssunto;
+    const matchSerie   = filtroSerie   === 'todos' || m.serie === filtroSerie;
+    const matchBusca   = !termoBusca   ||
+      m.titulo.toLowerCase().includes(termoBusca) ||
+      (m.descricao||'').toLowerCase().includes(termoBusca) ||
+      m.assunto.toLowerCase().includes(termoBusca);
+    return matchAssunto && matchSerie && matchBusca;
+  });
+}
+
+function renderMateriais() {
+  const todos = getMateriais();
+  renderFiltrosAssunto(todos);
+  const filtrados = getMaterialsFiltrados(todos);
+  const main = document.getElementById('mainContent');
+
+  if (!todos.length) {
+    main.innerHTML = `
+      <div class="page-empty">
+        <span class="icon">📂</span>
+        <h2>Nenhum material cadastrado ainda</h2>
+        <p>O administrador ainda não adicionou materiais.<br>Verifique novamente em breve!</p>
+      </div>`;
+    return;
+  }
+
+  if (!filtrados.length) {
+    main.innerHTML = `
+      <div class="page-empty">
+        <span class="icon">🔍</span>
+        <h2>Nenhum material encontrado</h2>
+        <p>Tente ajustar os filtros ou a busca.</p>
+      </div>`;
+    return;
+  }
+
+  // Agrupar por assunto
+  const grupos = {};
+  filtrados.forEach(m => {
+    if (!grupos[m.assunto]) grupos[m.assunto] = [];
+    grupos[m.assunto].push(m);
+  });
+
+  main.innerHTML = '';
+  Object.entries(grupos).sort((a,b) => a[0].localeCompare(b[0])).forEach(([assunto, lista]) => {
+    const cfg = ASSUNTOS_CONFIG[assunto] || { icon:'📄', cor:'rgba(0,196,113,0.2)', cor2:'#00c471' };
+    const section = document.createElement('div');
+    section.className = 'assunto-section';
+    section.innerHTML = `
+      <div class="assunto-header">
+        <div class="assunto-icon" style="background:${cfg.cor};color:${cfg.cor2}">${cfg.icon}</div>
+        <div class="assunto-title-group">
+          <div class="assunto-title">${assunto}</div>
+          <div class="assunto-count">${lista.length} material${lista.length!==1?'is':''}</div>
+        </div>
+      </div>
+      <div class="materiais-grid" id="grid-${assunto.replace(/\s/g,'_')}"></div>
+    `;
+    main.appendChild(section);
+
+    const grid = section.querySelector('.materiais-grid');
+    lista.forEach(m => grid.appendChild(criarCard(m, cfg)));
+  });
+}
+
+function criarCard(m, cfg) {
+  const serieClass = { '1':'serie-1','2':'serie-2','3':'serie-3','todos':'serie-todos' }[m.serie] || 'serie-todos';
+  const serieLabel = { '1':'1º Ano EM','2':'2º Ano EM','3':'3º Ano EM','todos':'Todas as séries' }[m.serie] || m.serie;
+  const dataFmt = m.data ? new Date(m.data+'T12:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'}) : '';
+
+  const card = document.createElement('div');
+  card.className = 'material-card';
+  card.innerHTML = `
+    <div class="card-thumb" style="--cor-assunto:${cfg.cor||'rgba(0,196,113,0.2)'}">
+      <div class="card-thumb-bg"></div>
+      <span class="card-thumb-icon">${cfg.icon||'📄'}</span>
+    </div>
+    <div class="card-body">
+      <span class="card-serie-tag ${serieClass}">${serieLabel}</span>
+      <div class="card-title">${m.titulo}</div>
+      ${m.descricao ? `<div class="card-desc">${m.descricao}</div>` : ''}
+    </div>
+    <div class="card-footer">
+      <span class="card-meta">📅 ${dataFmt}</span>
+      <button class="card-download" onclick="abrirPdf(event,'${m.id}')">
+        👁 Abrir PDF
+      </button>
+    </div>
+  `;
+  card.onclick = () => abrirPdf(null, m.id);
+  return card;
+}
+
+// ============================================================
+// VISUALIZADOR DE PDF
+// ============================================================
+function abrirPdf(e, id) {
+  if (e) e.stopPropagation();
+  const m = getMateriais().find(x => x.id === id);
+  if (!m || !m.pdfData) { mostrarToast('❌ PDF não encontrado'); return; }
+
+  document.getElementById('pdfModalTitle').textContent = m.titulo;
+  document.getElementById('pdfFrame').src = m.pdfData;
+
+  // Botão de download
+  const dlBtn = document.getElementById('pdfDownloadBtn');
+  dlBtn.href = m.pdfData;
+  dlBtn.download = m.titulo + '.pdf';
+
+  document.getElementById('pdfModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharPdf() {
+  document.getElementById('pdfModal').classList.remove('active');
+  document.getElementById('pdfFrame').src = '';
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 3000);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderMateriais();
+  document.addEventListener('keydown', e => { if(e.key==='Escape') fecharPdf(); });
+});
+</script>
+</body>
+</html>

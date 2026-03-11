@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CNT — Plataforma de Ensino de Ciência e Tecnologia</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --azul: #0047B6;
+  --azul2: #1a6eff;
+  --verde: #00c471;
+  --amarelo: #F2B817;
+  --roxo: #7c3aed;
+  --rosa: #f43f5e;
+  --bg: #060810;
+  --surface: #0d1017;
+  --card: #131620;
+  --border: rgba(255,255,255,0.07);
+  --text: #e8eaf0;
+  --muted: #6b7280;
+  --radius: 14px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,71,182,0.3); }
+  50% { box-shadow: 0 0 60px rgba(0,71,182,0.7); }
+}
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes blink {
+  50% { border-color: transparent; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes particle-float {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100px) scale(1); opacity: 0; }
+}
+@keyframes news-slide {
+  0% { opacity: 0; transform: translateX(30px); }
+  10% { opacity: 1; transform: translateX(0); }
+  85% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(-30px); }
+}
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+}
+
+/* ===== PARTÍCULAS ===== */
+.particles {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  animation: particle-float linear infinite;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 40px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(6,8,16,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.navbar.scrolled {
+  height: 60px;
+  background: rgba(6,8,16,0.97);
+}
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+.nav-logo {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--azul), var(--verde));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  animation: pulse-glow 3s infinite;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-links a.active { color: var(--amarelo); }
+.btn-planejador {
+  background: linear-gradient(135deg, var(--azul), var(--azul2));
+  color: #fff !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  padding: 10px 20px !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+  box-shadow: 0 4px 20px rgba(0,71,182,0.4);
+}
+.btn-planejador:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 30px rgba(0,71,182,0.6) !important; }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 100px 40px 60px;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 50%, rgba(0,71,182,0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 20%, rgba(0,196,113,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 90%, rgba(124,58,237,0.1) 0%, transparent 50%),
+    var(--bg);
+}
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,71,182,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,71,182,0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 30% 40%, black, transparent);
+}
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.hero-text { animation: fadeInUp 0.8s ease both; }
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,196,113,0.12);
+  border: 1px solid rgba(0,196,113,0.3);
+  color: var(--verde);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--verde);
+  border-radius: 50%;
+  animation: pulse-glow 2s infinite;
+}
+.hero-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+.hero-title span {
+  background: linear-gradient(135deg, var(--azul2), var(--verde), var(--amarelo));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 4s ease infinite;
+}
+.hero-desc {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 36px;
+  max-width: 480px;
+}
+.hero-buttons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.btn-primary-hero {
+  background: linear-gradient(135deg, var(--azul), var(--azul2));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 24px rgba(0,71,182,0.5);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary-hero:hover { transform: translateY(-3px); box-shadow: 0 8px 40px rgba(0,71,182,0.7); }
+.btn-secondary-hero {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-secondary-hero:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+/* ===== HERO VISUAL ===== */
+.hero-visual {
+  position: relative;
+  animation: fadeInUp 0.8s ease 0.2s both;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-orb {
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(0,196,113,0.4), rgba(0,71,182,0.3), transparent 70%);
+  border: 1px solid rgba(0,196,113,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 6s ease-in-out infinite;
+  position: relative;
+}
+.hero-orb-inner {
+  font-size: 80px;
+}
+.orbit-item {
+  position: absolute;
+  font-size: 26px;
+  animation: orbit linear infinite;
+}
+.orbit-item:nth-child(1) { animation-duration: 8s; top: 0; left: 50%; }
+.orbit-item:nth-child(2) { animation-duration: 12s; animation-delay: -4s; top: 0; left: 50%; }
+.orbit-item:nth-child(3) { animation-duration: 10s; animation-delay: -7s; top: 0; left: 50%; }
+.stats-float {
+  position: absolute;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 18px;
+  backdrop-filter: blur(10px);
+}
+.stats-float:nth-child(1) { top: 10%; right: -20px; animation: float 5s ease-in-out infinite; }
+.stats-float:nth-child(2) { bottom: 15%; left: -20px; animation: float 7s ease-in-out infinite 1s; }
+.stats-num { font-size: 22px; font-weight: 800; color: var(--verde); }
+.stats-label { font-size: 11px; color: var(--muted); }
+
+/* ===== NEWS TICKER ===== */
+.news-ticker {
+  background: rgba(242,184,23,0.08);
+  border-top: 1px solid rgba(242,184,23,0.2);
+  border-bottom: 1px solid rgba(242,184,23,0.2);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+.ticker-label {
+  background: var(--amarelo);
+  color: #111;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.ticker-track {
+  overflow: hidden;
+  flex: 1;
+}
+.ticker-inner {
+  display: flex;
+  gap: 60px;
+  animation: marquee 30s linear infinite;
+  white-space: nowrap;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-item {
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+.ticker-item span {
+  color: var(--amarelo);
+  font-weight: 600;
+}
+
+/* ===== SEÇÃO DE NOTÍCIAS ===== */
+.section {
+  padding: 80px 40px;
+  max-width: 1300px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--amarelo);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-label::before {
+  content: '';
+  width: 24px; height: 2px;
+  background: var(--amarelo);
+}
+.section-title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+.section-sub {
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 48px;
+  max-width: 560px;
+}
+
+/* ===== NOTÍCIA DESTAQUE (HERO NEWS) ===== */
+.news-hero {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 32px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.news-hero:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.news-hero-visual {
+  background: linear-gradient(135deg, rgba(0,71,182,0.4), rgba(0,196,113,0.2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100px;
+  min-height: 280px;
+  position: relative;
+  overflow: hidden;
+}
+.news-hero-visual.has-image {
+  font-size: 0;
+  padding: 0;
+}
+.news-hero-visual.has-image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.news-hero-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 50%, var(--card));
+  z-index: 1;
+}
+.news-hero-visual.has-image::after {
+  background: linear-gradient(to right, rgba(0,0,0,0.15) 30%, var(--card) 100%);
+}
+.news-hero-body {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.news-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+.cat-ciencia { background: rgba(0,196,113,0.15); color: var(--verde); }
+.cat-tecnologia { background: rgba(0,71,182,0.15); color: #6ea4ff; }
+.cat-educacao { background: rgba(242,184,23,0.15); color: var(--amarelo); }
+.cat-pesquisa { background: rgba(124,58,237,0.15); color: #c084fc; }
+.news-card-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+.news-card-excerpt {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.news-meta .dot { width: 4px; height: 4px; background: var(--muted); border-radius: 50%; }
+
+/* ===== GRID DE NOTÍCIAS ===== */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.news-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.news-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,71,182,0.4);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.news-card-thumb {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  position: relative;
+  overflow: hidden;
+}
+.news-card-content { padding: 20px; }
+.news-card-title-sm {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+.news-card-excerpt-sm {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== MATERIAIS COMPLEMENTARES ===== */
+.materials-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 40px;
+}
+.materials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.material-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  transition: all 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.material-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color, var(--azul));
+}
+.material-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); border-color: var(--color, var(--azul)); }
+.material-icon {
+  font-size: 36px;
+  margin-bottom: 14px;
+  display: block;
+}
+.material-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.material-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.material-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted);
+}
+
+/* ===== FEATURES ===== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.feature-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: radial-gradient(circle at center, var(--glow-color, rgba(0,71,182,0.1)), transparent 70%);
+}
+.feature-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
+.feature-card:hover::after { opacity: 1; }
+.feature-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+  display: block;
+}
+.feature-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.feature-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ===== MODAL DE NOTÍCIA ===== */
+.news-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.news-modal-overlay.active { opacity: 1; pointer-events: all; }
+.news-modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  max-width: 720px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s;
+  padding: 40px;
+}
+.news-modal-overlay.active .news-modal { transform: scale(1) translateY(0); }
+.modal-close {
+  float: right;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  margin-left: 16px;
+}
+.modal-close:hover { background: rgba(255,255,255,0.1); }
+.modal-body { font-size: 15px; color: #c8cad4; line-height: 1.8; margin-top: 20px; }
+.modal-body p { margin-bottom: 16px; }
+.modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--azul), var(--azul2));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 16px;
+}
+.modal-link:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,71,182,0.5); }
+
+/* ===== FOOTER ===== */
+.footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 60px 40px 40px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  max-width: 1300px;
+  margin: 0 auto;
+  margin-bottom: 48px;
+}
+.footer-brand h3 { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 12px; }
+.footer-brand p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.footer-col h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 16px; }
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col ul li a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+.footer-col ul li a:hover { color: #fff; }
+.footer-bottom {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ===== ADMIN BADGE ===== */
+.admin-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, var(--azul), var(--azul2));
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,71,182,0.5);
+  z-index: 500;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.admin-badge:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px rgba(0,71,182,0.7); }
+
+/* ===== SCROLL INDICATOR ===== */
+.scroll-down {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  z-index: 10;
+  animation: float 3s ease-in-out infinite;
+  text-decoration: none;
+}
+.scroll-down::after {
+  content: '↓';
+  font-size: 18px;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 900px) {
+  .hero-content { grid-template-columns: 1fr; gap: 40px; }
+  .hero-visual { display: none; }
+  .news-hero { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .navbar { padding: 0 20px; }
+  .section { padding: 60px 20px; }
+  .nav-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- PARTÍCULAS -->
+<div class="particles" id="particles"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">⚗️</div>
+    <span>CNT<span style="color:var(--verde)">.</span>edu</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#inicio" class="active">Início</a></li>
+    <li><a href="biologia.html">🧬 Biologia</a></li>
+    <li><a href="quimica.html">⚗️ Química</a></li>
+    <li><a href="ciencias.html">🔭 Ciências EF</a></li>
+    <li><a href="#noticias">Notícias</a></li>
+    <li><a href="planejador.html" class="btn-planejador">🗓️ Planejador</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-tag">Plataforma de Ensino</div>
+      <h1 class="hero-title">
+        Ciência e Tecnologia<br>
+        para <span>transformar</span><br>
+        o amanhã
+      </h1>
+      <p class="hero-desc">
+        Uma plataforma completa para professores e estudantes de Ciências da Natureza e Tecnologia — com planejamento de aulas, materiais complementares e as últimas novidades científicas.
+      </p>
+      <div class="hero-buttons">
+        <a href="planejador.html" class="btn-primary-hero">
+          🗓️ Acessar Planejador
+        </a>
+        <a href="#materiais" class="btn-secondary-hero">
+          📚 Ver Materiais
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-orb">
+        <div class="hero-orb-inner">🔬</div>
+        <div class="orbit-item" style="--orbit-r:90px">⚛️</div>
+        <div class="orbit-item" style="--orbit-r:110px">🧬</div>
+        <div class="orbit-item" style="--orbit-r:100px">💻</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="#noticias" class="scroll-down">Novidades</a>
+</section>
+
+<!-- TICKER -->
+<div class="news-ticker" id="newsTicker">
+  <div class="ticker-label">📡 NOVIDADES</div>
+  <div class="ticker-track">
+    <div class="ticker-inner" id="tickerInner">
+      <!-- preenchido por JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ===== SEÇÃO DE NOTÍCIAS ===== -->
+<div class="section" id="noticias">
+  <div class="section-label">Ciência em destaque</div>
+  <h2 class="section-title">Últimas Notícias</h2>
+  <p class="section-sub">Fique por dentro das descobertas e avanços mais recentes no campo das ciências e da tecnologia.</p>
+
+  <div class="news-hero" id="newsHero" onclick="abrirNoticia(0)">
+    <div class="news-hero-visual" id="newsHeroEmoji">🔬</div>
+    <div class="news-hero-body">
+      <div class="news-category cat-ciencia" id="newsHeroCat">Ciência</div>
+      <h2 class="news-card-title" id="newsHeroTitle">Carregando...</h2>
+      <p class="news-card-excerpt" id="newsHeroExcerpt"></p>
+      <div class="news-meta">
+        <span id="newsHeroDate"></span>
+        <div class="dot"></div>
+        <span id="newsHeroAuthor"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="news-grid" id="newsGrid">
+    <!-- preenchido por JS -->
+  </div>
+</div>
+
+<!-- ===== MATERIAIS COMPLEMENTARES ===== -->
+<div class="materials-section" id="materiais">
+  <div style="max-width:1300px;margin:0 auto;">
+    <div class="section-label" style="margin-bottom:12px">Recursos para estudo</div>
+    <h2 class="section-title">Materiais Complementares</h2>
+    <p class="section-sub">Links e recursos selecionados para aprofundar os estudos em CNT.</p>
+    <div class="materials-grid">
+      <a class="material-card" href="biologia.html" style="--color:#00c471">
+        <span class="material-icon">🧬</span>
+        <div class="material-title">Biblioteca de Biologia</div>
+        <div class="material-desc">PDFs organizados por assunto e série, adicionados pelos professores da plataforma.</div>
+        <span class="material-tag">📄 PDFs internos</span>
+      </a>
+      <a class="material-card" href="quimica.html" style="--color:#a855f7">
+        <div class="material-icon">⚗️</div>
+        <div class="material-title">Biblioteca de Química</div>
+        <div class="material-desc">PDFs e materiais de Química para o Ensino Médio — 1º ao 3º Ano.</div>
+      </a>
+      <a class="material-card" href="ciencias.html" style="--color:#f97316">
+        <span class="material-icon">🔭</span>
+        <div class="material-title">Biblioteca de Ciências EF</div>
+        <div class="material-desc">PDFs para o Ensino Fundamental (6º ao 9º ano), organizados por assunto e ano escolar.</div>
+        <span class="material-tag">📄 PDFs internos</span>
+      </a>
+      <a class="material-card" href="https://www.youtube.com/@Descomplica" target="_blank" style="--color:#f43f5e">
+        <span class="material-icon">🎥</span>
+        <div class="material-title">Descomplica</div>
+        <div class="material-desc">Videoaulas de Biologia, Química e Física para o Ensino Médio.</div>
+        <span class="material-tag">▶ YouTube</span>
+      </a>
+      <a class="material-card" href="https://www.khanacademy.org/pt" target="_blank" style="--color:#00c471">
+        <span class="material-icon">🧮</span>
+        <div class="material-title">Khan Academy</div>
+        <div class="material-desc">Plataforma gratuita com exercícios interativos de ciências e matemática.</div>
+        <span class="material-tag">🌐 Site</span>
+      </a>
+      <a class="material-card" href="https://ciencia.nasa.gov" target="_blank" style="--color:#0047B6">
+        <span class="material-icon">🚀</span>
+        <div class="material-title">NASA Science</div>
+        <div class="material-desc">Notícias e materiais educacionais sobre astronomia e exploração espacial.</div>
+        <span class="material-tag">🌐 Site</span>
+      </a>
+      <a class="material-card" href="https://www.scielo.br" target="_blank" style="--color:#7c3aed">
+        <span class="material-icon">📄</span>
+        <div class="material-title">SciELO Brasil</div>
+        <div class="material-desc">Biblioteca digital de artigos científicos em acesso aberto.</div>
+        <span class="material-tag">📚 Artigos</span>
+      </a>
+      <a class="material-card" href="https://brasilescola.uol.com.br/biologia" target="_blank" style="--color:#F2B817">
+        <span class="material-icon">🧬</span>
+        <div class="material-title">Brasil Escola — Bio</div>
+        <div class="material-desc">Textos, exercícios e resumos de Biologia para o Ensino Médio.</div>
+        <span class="material-tag">📖 Leitura</span>
+      </a>
+      <a class="material-card" href="https://www.qconcursos.com/questoes-de-vestibular/disciplinas/quimica" target="_blank" style="--color:#f43f5e">
+        <span class="material-icon">⚗️</span>
+        <div class="material-title">Questões de Química</div>
+        <div class="material-desc">Banco de questões de Química de vestibulares e ENEM.</div>
+        <span class="material-tag">✏️ Exercícios</span>
+      </a>
+      <a class="material-card" href="https://www.infoescola.com/fisica/" target="_blank" style="--color:#00c471">
+        <span class="material-icon">⚡</span>
+        <div class="material-title">InfoEscola — Física</div>
+        <div class="material-desc">Conteúdos, fórmulas e experimentos de Física com linguagem acessível.</div>
+        <span class="material-tag">📖 Leitura</span>
+      </a>
+      <a class="material-card" href="https://www.nationalgeographic.com.br/ciencia" target="_blank" style="--color:#F2B817">
+        <span class="material-icon">🌍</span>
+        <div class="material-title">National Geographic</div>
+        <div class="material-desc">Reportagens científicas e ambientais com recursos visuais incríveis.</div>
+        <span class="material-tag">🗺️ Revista</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PLATAFORMA ===== -->
+<div class="section" id="plataforma">
+  <div class="section-label">Ferramentas</div>
+  <h2 class="section-title">A plataforma CNT</h2>
+  <p class="section-sub">Tudo o que você precisa para planejar, ensinar e aprender Ciências e Tecnologia.</p>
+  <div class="features-grid">
+    <div class="feature-card" style="--glow-color:rgba(0,71,182,0.15)">
+      <span class="feature-icon">🗓️</span>
+      <div class="feature-title">Planejador de Aulas</div>
+      <div class="feature-desc">Organize o planejamento semanal de aulas para 4 escolas. Grade completa com horários, disciplinas, turmas e BNCC. Exporta para .docx.</div>
+    </div>
+    <div class="feature-card" style="--glow-color:rgba(0,196,113,0.15)">
+      <span class="feature-icon">📰</span>
+      <div class="feature-title">Mural de Notícias</div>
+      <div class="feature-desc">Notícias científicas atualizadas pelo administrador, com banco de dados histórico. Fácil de alimentar, sem precisar saber programação.</div>
+    </div>
+    <div class="feature-card" style="--glow-color:rgba(242,184,23,0.15)">
+      <span class="feature-icon">📚</span>
+      <div class="feature-title">Materiais Complementares</div>
+      <div class="feature-desc">Links curados para as melhores plataformas de ensino, artigos científicos e recursos para estudo de CNT.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>⚗️ CNT<span style="color:var(--verde)">.</span>edu</h3>
+      <p>Plataforma de ensino de Ciências da Natureza e Tecnologia para professores e estudantes de Santa Catarina.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Plataforma</h4>
+      <ul>
+        <li><a href="#">Início</a></li>
+        <li><a href="#noticias">Notícias</a></li>
+        <li><a href="#materiais">Materiais</a></li>
+        <li><a href="planejador.html">Planejador</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Disciplinas</h4>
+      <ul>
+        <li><a href="biologia.html">Biologia</a></li>
+        <li><a href="#">Química</a></li>
+        <li><a href="#">Física</a></li>
+        <li><a href="ciencias.html">Ciências EF</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Administração</h4>
+      <ul>
+        <li><a href="admin.html">Editar Notícias</a></li>
+        <li><a href="planejador.html">Planejador</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 CNT.edu — Plataforma Educacional</span>
+    <span>Feito com ❤️ para professores de SC</span>
+  </div>
+</footer>
+
+<!-- BOTÃO ADMIN FLUTUANTE -->
+<a href="admin.html" class="admin-badge">
+  ⚙️ Área Admin
+</a>
+
+<!-- MODAL DE NOTÍCIA -->
+<div class="news-modal-overlay" id="newsModal" onclick="fecharModal(event)">
+  <div class="news-modal">
+    <button class="modal-close" onclick="fecharModal()">✕</button>
+    <div class="news-category" id="modalCat" style="margin-bottom:16px"></div>
+    <h2 id="modalTitle" style="font-family:'Sora',sans-serif;font-size:24px;font-weight:800;margin-bottom:8px"></h2>
+    <div class="news-meta" style="margin-bottom:0">
+      <span id="modalDate"></span>
+      <div class="dot"></div>
+      <span id="modalAuthor"></span>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <a href="#" id="modalLink" class="modal-link" target="_blank" style="display:none">🔗 Leia mais</a>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// BANCO DE DADOS DE NOTÍCIAS (localStorage)
+// ============================================================
+function getNews() {
+  try {
+    const raw = localStorage.getItem('cnt_news');
+    return raw ? JSON.parse(raw) : getDefaultNews();
+  } catch { return getDefaultNews(); }
+}
+
+function getDefaultNews() {
+  return [
+    {
+      id: 1,
+      titulo: "CRISPR-Cas9: nova técnica permite edição genética com precisão inédita",
+      resumo: "Pesquisadores da USP desenvolvem método que reduz erros na edição do DNA em até 90%, abrindo caminho para tratamentos de doenças genéticas raras.",
+      conteudo: "Uma equipe de pesquisadores da Universidade de São Paulo (USP) anunciou um avanço significativo na tecnologia CRISPR-Cas9. O novo método, publicado na revista Nature Biotechnology, consegue reduzir as chamadas 'edições fora do alvo' em até 90%, tornando a técnica muito mais segura para aplicações terapêuticas.\n\nA ferramenta CRISPR permite cortar e editar sequências específicas do DNA com uma precisão sem precedentes. No entanto, um dos maiores desafios sempre foi a possibilidade de alterações indesejadas em regiões não-alvo do genoma. O novo protocolo desenvolvido no Brasil supera essa limitação.\n\nCom essa melhoria, os cientistas esperam acelerar o desenvolvimento de terapias gênicas para doenças como a fibrose cística, a anemia falciforme e algumas formas de câncer hereditário.",
+      categoria: "Biologia",
+      emoji: "🧬",
+      catClass: "cat-ciencia",
+      data: "2025-06-10",
+      autor: "Equipe CNT.edu",
+      link: "https://www.nature.com",
+      destaque: true
+    },
+    {
+      id: 2,
+      titulo: "Inteligência Artificial prevê estrutura de proteínas com 99% de precisão",
+      resumo: "AlphaFold 3 da DeepMind resolve um dos maiores problemas da biologia molecular, impactando o desenvolvimento de novos medicamentos.",
+      conteudo: "A DeepMind, subsidiária da Alphabet (Google), lançou a terceira versão do AlphaFold, sistema de inteligência artificial capaz de prever a estrutura tridimensional de proteínas com precisão de 99%. Essa conquista é considerada uma das maiores da biologia moderna.\n\nAs proteínas são moléculas fundamentais para todos os processos biológicos, mas determinar sua estrutura 3D era historicamente um processo longo e caro. Com o AlphaFold 3, pesquisadores agora podem modelar milhões de proteínas em horas.\n\nO impacto no desenvolvimento de medicamentos é imediato: empresas farmacêuticas já utilizam o sistema para identificar candidatos a novos remédios para doenças como Alzheimer, Parkinson e vários tipos de câncer.",
+      categoria: "Tecnologia",
+      emoji: "🤖",
+      catClass: "cat-tecnologia",
+      data: "2025-05-28",
+      autor: "Equipe CNT.edu",
+      link: "https://alphafold.ebi.ac.uk",
+      destaque: false
+    },
+    {
+      id: 3,
+      titulo: "Brasil lança programa nacional de energia solar para escolas públicas",
+      resumo: "Governo federal anuncia instalação de painéis fotovoltaicos em 10 mil escolas até 2026, gerando economia de R$ 500 milhões anuais.",
+      conteudo: "O Ministério da Educação, em parceria com o Ministério de Minas e Energia, lançou o Programa Nacional de Energia Solar para Educação Pública (ProSolar-Edu). A iniciativa prevê a instalação de sistemas de geração solar em 10 mil escolas públicas do país até o final de 2026.\n\nAlém da economia financeira, o programa tem um forte componente pedagógico: as instalações serão usadas como laboratórios vivos de energias renováveis, integrando o currículo de Ciências, Física e Química.\n\nO projeto também prevê a formação de professores para trabalhar com os dados de geração de energia como material didático.",
+      categoria: "Educação",
+      emoji: "☀️",
+      catClass: "cat-educacao",
+      data: "2025-05-15",
+      autor: "Equipe CNT.edu",
+      link: "#",
+      destaque: false
+    },
+    {
+      id: 4,
+      titulo: "Descoberta de novo antibiótico combate bactérias resistentes",
+      resumo: "Composto extraído de solo da Antártida mostra eficácia contra superbactérias que desafiam tratamentos convencionais.",
+      conteudo: "Cientistas da Universidade Federal do Rio de Janeiro (UFRJ) isolaram um novo composto antimicrobiano em amostras de solo coletadas na Antártida. O composto, batizado de Antarcticina, mostrou eficácia contra várias cepas de bactérias resistentes a antibióticos convencionais, incluindo o temido Staphylococcus aureus resistente à meticilina (MRSA).\n\nA resistência bacteriana é considerada uma das maiores ameaças à saúde pública global pelo século XXI. A OMS estima que, sem novos antibióticos, as infecções bacterianas poderão superar o câncer como causa de morte até 2050.\n\nOs pesquisadores estão agora conduzindo testes pré-clínicos para avaliar a segurança e eficácia do composto antes de avançar para ensaios em humanos.",
+      categoria: "Pesquisa",
+      emoji: "🦠",
+      catClass: "cat-pesquisa",
+      data: "2025-04-20",
+      autor: "Equipe CNT.edu",
+      link: "#",
+      destaque: false
+    }
+  ];
+}
+
+// ============================================================
+// RENDERIZAÇÃO
+// ============================================================
+const CATEGORY_LABELS = {
+  'Biologia': 'Biologia',
+  'Química': 'Química',
+  'Física': 'Física',
+  'Tecnologia': 'Tecnologia',
+  'Educação': 'Educação',
+  'Pesquisa': 'Pesquisa',
+  'Ciência': 'Ciência',
+  'Meio Ambiente': 'Meio Ambiente'
+};
+const CATEGORY_CLASSES = {
+  'Biologia': 'cat-ciencia',
+  'Química': 'cat-pesquisa',
+  'Física': 'cat-tecnologia',
+  'Tecnologia': 'cat-tecnologia',
+  'Educação': 'cat-educacao',
+  'Pesquisa': 'cat-pesquisa',
+  'Ciência': 'cat-ciencia',
+  'Meio Ambiente': 'cat-educacao'
+};
+
+function getCatClass(cat) {
+  return CATEGORY_CLASSES[cat] || 'cat-ciencia';
+}
+
+function fmtData(str) {
+  if (!str) return '';
+  const d = new Date(str + 'T12:00:00');
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+
+let noticiasData = [];
+let noticiaAtual = null;
+
+function renderNoticias() {
+  noticiasData = getNews();
+  const destaque = noticiasData[0];
+
+  // Hero
+  if (destaque) {
+    const heroVisual = document.getElementById('newsHeroEmoji');
+    if (destaque.imagem) {
+      heroVisual.classList.add('has-image');
+      heroVisual.innerHTML = `<img src="${destaque.imagem}" alt="${destaque.titulo}" onerror="this.parentElement.classList.remove('has-image');this.parentElement.textContent='${destaque.emoji || '📰'}'">`;
+    } else {
+      heroVisual.classList.remove('has-image');
+      heroVisual.innerHTML = destaque.emoji || '📰';
+    }
+    document.getElementById('newsHeroCat').textContent = destaque.categoria;
+    document.getElementById('newsHeroCat').className = `news-category ${getCatClass(destaque.categoria)}`;
+    document.getElementById('newsHeroTitle').textContent = destaque.titulo;
+    document.getElementById('newsHeroExcerpt').textContent = destaque.resumo;
+    document.getElementById('newsHeroDate').textContent = fmtData(destaque.data);
+    document.getElementById('newsHeroAuthor').textContent = destaque.autor || 'CNT.edu';
+  }
+
+  // Grid (restantes)
+  const grid = document.getElementById('newsGrid');
+  grid.innerHTML = '';
+  const restantes = noticiasData.slice(1, 4);
+  restantes.forEach((n, i) => {
+    const cores = ['rgba(0,71,182,0.2)', 'rgba(0,196,113,0.2)', 'rgba(242,184,23,0.2)', 'rgba(124,58,237,0.2)'];
+    const card = document.createElement('div');
+    card.className = 'news-card';
+    card.onclick = () => abrirNoticia(i + 1);
+    const thumbContent = n.imagem
+      ? `<img src="${n.imagem}" alt="${n.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0" onerror="this.style.display='none'">`
+      : (n.emoji || '📰');
+    card.innerHTML = `
+      <div class="news-card-thumb" style="background:linear-gradient(135deg,${cores[i]},transparent);position:relative;overflow:hidden">
+        ${thumbContent}
+      </div>
+      <div class="news-card-content">
+        <div class="news-category ${getCatClass(n.categoria)}" style="margin-bottom:10px">${n.categoria}</div>
+        <div class="news-card-title-sm">${n.titulo}</div>
+        <div class="news-card-excerpt-sm">${n.resumo}</div>
+        <div class="news-meta" style="font-size:11px">
+          <span>${fmtData(n.data)}</span>
+          <div class="dot"></div>
+          <span>${n.autor || 'CNT.edu'}</span>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Ticker
+  const ticker = document.getElementById('tickerInner');
+  const items = [...noticiasData, ...noticiasData];
+  ticker.innerHTML = items.map(n =>
+    `<span class="ticker-item" onclick="abrirNoticia(${noticiasData.indexOf(n)})">
+      <span>${n.emoji || '📰'} ${n.categoria}:</span> ${n.titulo}
+    </span>`
+  ).join('');
+
+  // Counter
+  
+}
+
+function abrirNoticia(idx) {
+  const n = noticiasData[idx];
+  if (!n) return;
+  noticiaAtual = n;
+  document.getElementById('modalCat').textContent = n.categoria;
+  document.getElementById('modalCat').className = `news-category ${getCatClass(n.categoria)}`;
+  document.getElementById('modalTitle').textContent = n.titulo;
+  document.getElementById('modalDate').textContent = fmtData(n.data);
+  document.getElementById('modalAuthor').textContent = n.autor || 'CNT.edu';
+  const body = document.getElementById('modalBody');
+  const imgHtml = n.imagem
+    ? `<div style="margin:16px 0 24px;border-radius:12px;overflow:hidden;max-height:320px;">
+        <img src="${n.imagem}" alt="${n.titulo}" style="width:100%;height:100%;object-fit:cover;display:block;max-height:320px;" onerror="this.parentElement.style.display='none'">
+       </div>`
+    : '';
+  body.innerHTML = imgHtml + (n.conteudo || n.resumo).split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('');
+  const link = document.getElementById('modalLink');
+  if (n.link && n.link !== '#') {
+    link.href = n.link;
+    link.style.display = 'inline-flex';
+  } else {
+    link.style.display = 'none';
+  }
+  document.getElementById('newsModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModal(e) {
+  if (e && e.target !== document.getElementById('newsModal')) return;
+  document.getElementById('newsModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// PARTÍCULAS
+// ============================================================
+function criarParticulas() {
+  const container = document.getElementById('particles');
+  const cores = ['#0047B6', '#00c471', '#F2B817', '#7c3aed', '#f43f5e'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 15) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.background = cores[Math.floor(Math.random() * cores.length)];
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+  }
+}
+
+// ============================================================
+// SCROLL NAVBAR
+// ============================================================
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  criarParticulas();
+  renderNoticias();
+
+  // Fechar modal ao pressionar ESC
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.getElementById('newsModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Animação de entrada nos elementos
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'fadeInUp 0.6s ease both';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.feature-card, .material-card, .news-card').forEach(el => observer.observe(el));
+});
+</script>
+</body>
+</html>

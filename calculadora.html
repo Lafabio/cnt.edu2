@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Somatório CCF" />
+  <meta name="theme-color" content="#7B1518" />
+  <title>Calculadora Somatório UFSC - CCF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:       #7B1518;
+      --red-dark:  #5C0F12;
+      --red-light: #9B2528;
+      --gold:      #C4982A;
+      --gold-light:#E2B84A;
+      --white:     #FFFFFF;
+      --cream:     #FDF8F0;
+      --text:      #2C0A0B;
+      --muted:     #8B5E5F;
+      --safe-top:  env(safe-area-inset-top, 0px);
+      --safe-bot:  env(safe-area-inset-bottom, 0px);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: calc(var(--safe-bot) + 2rem);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(160deg, var(--red-dark) 0%, var(--red) 60%, var(--red-light) 100%);
+      padding: calc(var(--safe-top) + 1.8rem) 1.5rem 2.8rem;
+      position: relative; overflow: hidden; text-align: center;
+    }
+    .header::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 70% 40%, rgba(196,152,42,0.18) 0%, transparent 65%);
+    }
+    .header::after {
+      content: ''; position: absolute;
+      bottom: -1px; left: 0; right: 0; height: 36px;
+      background: var(--cream);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+    .header-inner {
+      position: relative;
+      display: flex; flex-direction: column; align-items: center; gap: .9rem;
+    }
+    .logo-svg-wrap { width: 220px; height: 80px; display: flex; align-items: center; justify-content: center; }
+    .header-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700; color: var(--white); line-height: 1.3;
+    }
+    .header-title span {
+      display: block; font-size: 13px; font-weight: 400;
+      font-family: 'DM Sans', sans-serif;
+      color: rgba(255,255,255,0.6); margin-top: 2px; letter-spacing: 1px;
+    }
+
+    /* ── Banner iOS ── */
+    #banner-instalar {
+      display: none; margin: 1rem 1rem 0;
+      background: #fff8e8; border: 1px solid var(--gold);
+      border-radius: 12px; padding: 12px 14px;
+      font-size: 12px; color: var(--red-dark); line-height: 1.6; position: relative;
+    }
+    #banner-instalar strong { color: var(--red); }
+    #banner-instalar .steps { color: var(--muted); margin-top: 4px; }
+    #banner-instalar .steps b { color: var(--gold); }
+    #btn-fechar-banner {
+      position: absolute; top: 8px; right: 10px;
+      background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer;
+    }
+
+    /* ── App ── */
+    #app { max-width: 520px; margin: 0 auto; padding: 1.5rem 1rem 0; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--white);
+      border: 1px solid rgba(196,152,42,0.2);
+      border-radius: 16px; padding: 1.4rem; margin-bottom: 1.2rem;
+      box-shadow: 0 2px 16px rgba(123,21,24,0.07);
+      animation: fadeUp .35s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.3rem; flex-wrap: wrap; gap: 8px;
+    }
+    .card-label { font-size: 10px; font-weight: 600; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--red-dark); margin-top: 2px; }
+
+    /* ── Seletor NP ── */
+    .np-selector { display: flex; align-items: center; gap: 5px; }
+    .np-label { font-size: 11px; color: var(--muted); margin-right: 2px; }
+    .np-btn {
+      width: 38px; height: 38px; border-radius: 8px;
+      border: 1.5px solid rgba(196,152,42,0.3);
+      background: var(--cream); color: var(--muted);
+      font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: all .18s; display: flex; align-items: center; justify-content: center;
+    }
+    .np-btn.active {
+      border-color: var(--red); background: var(--red);
+      color: var(--white); box-shadow: 0 2px 8px rgba(123,21,24,0.3);
+    }
+
+    /* ── Referência de valores ── */
+    .ref-strip {
+      display: flex; gap: 6px; margin-bottom: 1.2rem; flex-wrap: wrap;
+    }
+    .ref-pill {
+      flex: 1; min-width: 38px;
+      background: var(--cream); border: 1px solid rgba(196,152,42,0.25);
+      border-radius: 8px; padding: 5px 4px; text-align: center;
+    }
+    .ref-pill .rk { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    .ref-pill .rv { font-size: 14px; font-weight: 700; color: var(--red-dark); }
+
+
+    /* ── Divisor ── */
+    .gold-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.1rem 0; opacity: 0.35;
+    }
+
+    /* ── Inputs numéricos ── */
+    .inputs-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      margin-bottom: 1.1rem;
+    }
+    .input-group { display: flex; flex-direction: column; gap: 6px; }
+    .input-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 2px; display: flex; align-items: center; gap: 5px;
+    }
+    .input-label.gab { color: var(--red); }
+    .input-label.alu { color: var(--gold); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-red  { background: var(--red); }
+    .dot-gold { background: var(--gold); }
+
+    .num-input {
+      width: 100%; padding: 14px 16px;
+      font-size: 28px; font-weight: 700; font-family: 'Playfair Display', serif;
+      text-align: center; color: var(--text);
+      background: var(--cream);
+      border: 2px solid rgba(196,152,42,0.25);
+      border-radius: 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -moz-appearance: textfield;
+    }
+    .num-input::-webkit-outer-spin-button,
+    .num-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .num-input:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(123,21,24,0.1); }
+    .num-input.gab-focus { border-color: var(--red); }
+    .num-input.alu-focus { border-color: var(--gold); }
+    .num-input.invalid  { border-color: #B71C1C; background: rgba(183,28,28,0.05); }
+
+    .input-hint {
+      font-size: 10px; color: var(--muted); text-align: center; min-height: 14px;
+    }
+    .input-hint.ok   { color: #2E7D32; font-weight: 600; }
+    .input-hint.err  { color: #B71C1C; font-weight: 600; }
+
+    /* ── Decomposição agrupada ── */
+    .decomp-section { margin-bottom: 1.1rem; display: flex; flex-direction: column; gap: 8px; }
+    .decomp-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .decomp-group-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; white-space: nowrap; min-width: 80px;
+    }
+    .decomp-group-label.lbl-correta { color: #2E7D32; }
+    .decomp-group-label.lbl-gabarito { color: var(--red); }
+    .decomp-pills { display: flex; gap: 5px; flex-wrap: wrap; }
+    .decomp-pill {
+      min-width: 34px; padding: 4px 6px;
+      border-radius: 6px; border: 1.5px solid #EDE0C4;
+      font-size: 12px; font-weight: 700; text-align: center;
+      background: var(--cream); color: #C5B09A;
+      transition: all .2s;
+    }
+    .decomp-pill.gab  { border-color: var(--red);  background: rgba(123,21,24,0.08); color: var(--red); }
+    .decomp-pill.ok   { border-color: #2E7D32; background: rgba(46,125,50,0.1);   color: #2E7D32; }
+    .decomp-pill.err  { border-color: #B71C1C; background: rgba(183,28,28,0.08);  color: #B71C1C; }
+    .decomp-empty { font-size: 11px; color: #C5B09A; font-style: italic; }
+
+    /* ── Pontuação ── */
+    .score-box {
+      border-radius: 12px; background: var(--cream);
+      border: 1.5px solid rgba(196,152,42,0.25);
+      padding: 1rem 1.2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; transition: border-color .3s, background .3s;
+    }
+    .score-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; }
+    .score-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px; font-weight: 700; color: var(--muted); transition: color .3s;
+    }
+
+    /* ── Barra ── */
+    .bar-wrap { height: 8px; background: #EDE0C4; border-radius: 4px; overflow: hidden; margin-bottom: 1.2rem; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width .45s cubic-bezier(.4,0,.2,1), background .3s; }
+
+
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo-svg-wrap">
+        <svg viewBox="0 0 220 80" xmlns="http://www.w3.org/2000/svg" width="220" height="80">
+          <circle cx="28" cy="18" r="10" fill="white"/>
+          <path d="M14 42 Q18 28 28 28 Q40 28 40 38 L37 54 L20 54 Z" fill="white"/>
+          <path d="M10 46 Q22 30 40 36 Q58 42 80 34" stroke="#C4982A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <polygon points="78,27 86,37 72,40" fill="#C4982A"/>
+          <text x="90" y="58" font-family="Georgia, 'Times New Roman', serif" font-weight="800" font-size="46" fill="#C4982A" stroke="white" stroke-width="3" paint-order="stroke">CCF</text>
+        </svg>
+      </div>
+      <div class="header-title">
+        Calculadora Somatório UFSC
+        <span>CCF — Correção por proposições múltiplas</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="banner-instalar">
+    <button id="btn-fechar-banner">×</button>
+    <strong>📲 Instalar no iPhone</strong>
+    <div class="steps">Toque em <b>Compartilhar</b> → <b>"Adicionar à Tela de Início"</b> → <b>Adicionar</b>.</div>
+  </div>
+
+  <div id="app">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-label">Questão</div>
+          <div class="card-title" id="questao-titulo">Questão 1</div>
+        </div>
+        <div class="np-selector">
+          <span class="np-label">Alt.:</span>
+          <button class="np-btn active" data-np="4">4</button>
+          <button class="np-btn" data-np="5">5</button>
+          <button class="np-btn" data-np="6">6</button>
+          <button class="np-btn" data-np="7">7</button>
+        </div>
+      </div>
+
+      <!-- Referência de valores disponíveis -->
+      <div class="ref-strip" id="ref-strip"></div>
+
+      <!-- Inputs numéricos -->
+      <div class="inputs-row">
+        <div class="input-group">
+          <div class="input-label gab"><div class="dot dot-red"></div>Gabarito</div>
+          <input class="num-input" id="inp-gab" type="number" min="0" placeholder="0" inputmode="numeric">
+          <div class="input-hint" id="hint-gab"></div>
+        </div>
+        <div class="input-group">
+          <div class="input-label alu"><div class="dot dot-gold"></div>Aluno</div>
+          <input class="num-input" id="inp-alu" type="number" min="0" placeholder="0" inputmode="numeric">
+          <div class="input-hint" id="hint-alu"></div>
+        </div>
+      </div>
+
+      <!-- Decomposição visual das alternativas -->
+      <div class="decomp-section" id="decomp-section"></div>
+
+      <div class="gold-divider"></div>
+
+      <!-- Pontuação -->
+      <div class="score-box" id="score-box">
+        <span class="score-label">Pontuação</span>
+        <span class="score-value" id="score-value">—</span>
+      </div>
+
+      <div class="bar-wrap"><div class="bar-fill" id="bar-questao" style="width:0%;background:#EDE0C4"></div></div>
+    </div>
+  </div>
+
+<script>
+  // Potências de 2 usadas na somatória
+  const PESOS = [1, 2, 4, 8, 16, 32, 64];
+
+  let np = 4;
+
+  // ── iOS banner ─────────────────────────────────────────────────────────────
+  if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone) {
+    document.getElementById("banner-instalar").style.display = "block";
+  }
+  document.getElementById("btn-fechar-banner").onclick = () => {
+    document.getElementById("banner-instalar").style.display = "none";
+  };
+
+  // ── Service Worker ─────────────────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    const sw = `const C='ccf-v3';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['/'])));self.skipWaiting();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));});`;
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'})));
+  }
+
+  // ── Utilitários ────────────────────────────────────────────────────────────
+  const cor = p => p >= 0.75 ? '#2E7D32' : p >= 0.5 ? '#C4982A' : '#B71C1C';
+
+  function calcP(np, ntpc, npc, npi) {
+    if (npc > npi) return Math.max(0, Math.min(1, (np - (ntpc - (npc - npi))) / np));
+    return 0;
+  }
+
+  // Decompõe um valor em quais alternativas (índices) estão marcadas
+  function decompor(valor, np) {
+    const marcadas = [];
+    for (let i = 0; i < np; i++) {
+      if (valor & PESOS[i]) marcadas.push(i);
+    }
+    return marcadas;
+  }
+
+  // Valor máximo possível para np alternativas
+  function maxValor(np) {
+    return PESOS.slice(0, np).reduce((a, b) => a + b, 0);
+  }
+
+  // ── Referência de pesos ────────────────────────────────────────────────────
+  function renderRef() {
+    const strip = document.getElementById("ref-strip");
+    strip.innerHTML = "";
+    for (let i = 0; i < np; i++) {
+      const pill = document.createElement("div");
+      pill.className = "ref-pill";
+      pill.innerHTML = `<div class="rk">Alt ${i+1}</div><div class="rv">${PESOS[i].toString().padStart(2,"0")}</div>`;
+      strip.appendChild(pill);
+    }
+  }
+
+  // ── Decomposição visual ────────────────────────────────────────────────────
+  function renderDec(gabArr, aluArr) {
+    const section = document.getElementById("decomp-section");
+    section.innerHTML = "";
+
+    // Grupo: Questões Corretas (aluno acertou)
+    const corretas = gabArr.filter(i => aluArr.includes(i));
+    const grpCorreta = document.createElement("div");
+    grpCorreta.className = "decomp-group";
+    grpCorreta.innerHTML = `<span class="decomp-group-label lbl-correta">Corretas</span><div class="decomp-pills" id="pills-corretas"></div>`;
+    section.appendChild(grpCorreta);
+    const pcorretas = grpCorreta.querySelector("#pills-corretas");
+    if (corretas.length === 0) {
+      pcorretas.innerHTML = `<span class="decomp-empty">nenhuma</span>`;
+    } else {
+      corretas.forEach(i => {
+        const p = document.createElement("div");
+        p.className = "decomp-pill ok";
+        p.textContent = PESOS[i].toString().padStart(2,"0");
+        pcorretas.appendChild(p);
+      });
+    }
+
+    // Grupo: Questões Gabarito (todas as corretas do gabarito)
+    const grpGab = document.createElement("div");
+    grpGab.className = "decomp-group";
+    grpGab.innerHTML = `<span class="decomp-group-label lbl-gabarito">Gabarito</span><div class="decomp-pills" id="pills-gabarito"></div>`;
+    section.appendChild(grpGab);
+    const pgab = grpGab.querySelector("#pills-gabarito");
+    if (gabArr.length === 0) {
+      pgab.innerHTML = `<span class="decomp-empty">nenhum</span>`;
+    } else {
+      gabArr.forEach(i => {
+        const p = document.createElement("div");
+        const acertou = aluArr.includes(i);
+        p.className = "decomp-pill " + (acertou ? "ok" : "gab");
+        p.textContent = PESOS[i].toString().padStart(2,"0");
+        pgab.appendChild(p);
+      });
+    }
+  }
+
+  // ── Atualiza tudo ──────────────────────────────────────────────────────────
+  function atualizar() {
+    const vGab = parseInt(document.getElementById("inp-gab").value) || 0;
+    const vAlu = parseInt(document.getElementById("inp-alu").value) || 0;
+    const max  = maxValor(np);
+
+    const gabInvalido = vGab < 0 || vGab > max || vGab === 0;
+    const aluInvalido = vAlu < 0 || vAlu > max;
+
+    // Hints
+    const hg = document.getElementById("hint-gab");
+    const ha = document.getElementById("hint-alu");
+
+    if (vGab === 0) {
+      hg.textContent = ""; hg.className = "input-hint";
+      document.getElementById("inp-gab").classList.remove("invalid");
+    } else if (gabInvalido) {
+      hg.textContent = `Máx: ${max}`; hg.className = "input-hint err";
+      document.getElementById("inp-gab").classList.add("invalid");
+    } else {
+      const arr = decompor(vGab, np);
+      hg.textContent = "Alt: " + arr.map(i => PESOS[i].toString().padStart(2,"0")).join(" + ");
+      hg.className = "input-hint ok";
+      document.getElementById("inp-gab").classList.remove("invalid");
+    }
+
+    if (vAlu === 0 && !document.getElementById("inp-alu").value) {
+      ha.textContent = ""; ha.className = "input-hint";
+      document.getElementById("inp-alu").classList.remove("invalid");
+    } else if (aluInvalido && vAlu !== 0) {
+      ha.textContent = `Máx: ${max}`; ha.className = "input-hint err";
+      document.getElementById("inp-alu").classList.add("invalid");
+    } else {
+      const arr = decompor(vAlu, np);
+      ha.textContent = arr.length ? "Alt: " + arr.map(i => PESOS[i].toString().padStart(2,"0")).join(" + ") : "Nenhuma";
+      ha.className = "input-hint ok";
+      document.getElementById("inp-alu").classList.remove("invalid");
+    }
+
+    // Cálculo
+    const sv  = document.getElementById("score-value");
+    const sb  = document.getElementById("score-box");
+    const bar = document.getElementById("bar-questao");
+
+    if (!gabInvalido && !aluInvalido) {
+      const gabArr = decompor(vGab, np);
+      const aluArr = decompor(vAlu, np);
+
+      renderDec(gabArr, aluArr);
+
+      const ntpc = gabArr.length;
+      const npc  = aluArr.filter(i => gabArr.includes(i)).length;
+      const npi  = aluArr.filter(i => !gabArr.includes(i)).length;
+      const p    = calcP(np, ntpc, npc, npi);
+      const c    = cor(p);
+
+      sv.textContent = p.toFixed(2); sv.style.color = c;
+      sb.style.borderColor = c; sb.style.background = c+"11";
+      bar.style.width = (p*100)+"%"; bar.style.background = c;
+    } else {
+      renderDec([], []);
+      sv.textContent = "—"; sv.style.color = "var(--muted)";
+      sb.style.borderColor = "rgba(196,152,42,0.25)"; sb.style.background = "var(--cream)";
+      bar.style.width = "0%"; bar.style.background = "#EDE0C4";
+    }
+  }
+
+  // ── Seletor NP ─────────────────────────────────────────────────────────────
+  document.querySelectorAll(".np-btn").forEach(b => {
+    b.addEventListener("click", () => {
+      np = parseInt(b.dataset.np);
+      document.querySelectorAll(".np-btn").forEach(x => x.classList.toggle("active", x.dataset.np==np));
+      document.getElementById("inp-gab").value = "";
+      document.getElementById("inp-alu").value = "";
+      renderRef();
+      atualizar();
+    });
+  });
+
+  // ── Inputs ────────────────────────────────────────────────────────────────
+  document.getElementById("inp-gab").addEventListener("input", atualizar);
+  document.getElementById("inp-alu").addEventListener("input", atualizar);
+
+
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  renderRef();
+  atualizar();
+</script>
+</body>
+</html>
